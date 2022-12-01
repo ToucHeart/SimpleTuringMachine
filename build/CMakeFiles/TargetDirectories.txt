@@ -1,3 +1,0 @@
-/home/mxj/FLA22proj工程框架/build/CMakeFiles/rebuild_cache.dir
-/home/mxj/FLA22proj工程框架/build/CMakeFiles/edit_cache.dir
-/home/mxj/FLA22proj工程框架/build/CMakeFiles/turing.dir
