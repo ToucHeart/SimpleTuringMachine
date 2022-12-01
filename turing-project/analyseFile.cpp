@@ -10,7 +10,7 @@ static const char BLANK = '_';
 
 void analyseFile(const string &filename)
 {
-    ifstream input("../programs/" + filename, ios::in);
+    ifstream input(filename, ios::in);
     if (!input)
     {
         cout << strerror(errno) << ": " << filename;
