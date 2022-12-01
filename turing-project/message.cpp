@@ -8,6 +8,7 @@ static std::string message[] = {
     ", file open failed",
     "arg format error,expecting *.tm",
     "lack input for TM",
+    "unknown grammar in input file",
 };
 
 void printMessage(Message m, Message exit_code)

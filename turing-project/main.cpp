@@ -53,11 +53,7 @@ int main(int argc, char *argv[])
     if (i == argc || (tmInput = string(argv[i])).empty())
         printMessage(LACK_INPUT, LACK_INPUT);
 
-    // TM *tm = analyseFile(filename);
-    /*
-    if (verbose)
-        tm->setVerbose();
+    TM *tm = new TM(filename, verbose);
     tm->run(tmInput);
-    */
     return 0;
 }
