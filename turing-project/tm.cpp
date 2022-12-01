@@ -19,6 +19,38 @@ void removeBrackets(string &line) //得到{}中的部分
     line = line.substr(left + 1, right - left - 1);
 }
 
+void removeComment(string &line) // q0 N delta function   去掉行尾注释和行尾多余空格
+{
+    int idx = line.find(';');
+    if (idx != string::npos)
+        line = line.substr(0, idx);
+    int len = line.size() - 1;
+    while (line[len] == ' ')
+        len--;
+    line.resize(len + 1);
+}
+
+void TM::setValue(string &line) // q0 N
+{
+    removeComment(line);
+    int left = line.find('=');
+    left++;
+    while (left < line.size() && line[left] == ' ')
+        left++;
+    if (line[1] == 'q')
+        startState = line.substr(left, line.size() - left);
+    else if (line[1] == 'N')
+    {
+        int num = 0;
+        while (left < line.size())
+        {
+            num = num * 10 + line[left] - '0';
+            left++;
+        }
+        tapeNumber = num;
+    }
+}
+
 void split(string &line, vector<string> &receiver, char split) // case 1 & case 3
 {
     stringstream ss(line);
@@ -34,11 +66,30 @@ void split(string &line, vector<string> &receiver, char split) // case 1 & case 
 #endif
 }
 
-void TM::setValue(string &line) // q0 B N
+void TM::addValue(string &line, char type)
 {
-    
+    switch (type)
+    {
+    case 'Q':
+        split(line, this->states, ',');
+        break;
+    case 'S':
+        split(line, this->inputSymbols, ',');
+        break;
+    case 'G':
+        split(line, this->tapeSymbols, ',');
+        break;
+    case 'F':
+        split(line, this->finalStates, ',');
+        break;
+    }
 }
-
+void TM::parseDelta(string &line)
+{
+    removeComment(line);
+    vector<string> tmp;
+    split(line, tmp, ' ');
+}
 void TM::parseFile(const string &filename)
 {
     ifstream input(filename, ios::in);
@@ -57,30 +108,17 @@ void TM::parseFile(const string &filename)
             switch (line[1])
             {
             case 'Q':
-            {
-                removeBrackets(line);
-                split(line, this->states, ',');
-            }
-            break;
             case 'S':
-            {
-                removeBrackets(line);
-                split(line, this->inputSymbols, ',');
-            }
-            break;
             case 'G':
-            {
-                removeBrackets(line);
-                split(line, this->tapeSymbols, ',');
-            }
-            break;
             case 'F':
             {
+                char c = line[1];
                 removeBrackets(line);
-                split(line, this->finalStates, ',');
+                addValue(line, c);
             }
             break;
             case 'B':
+                break;
             case 'q':
             case 'N':
                 setValue(line);
@@ -92,6 +130,7 @@ void TM::parseFile(const string &filename)
         }
         else // delta functions
         {
+            parseDelta(line);
         }
     }
     input.close();
@@ -102,7 +141,36 @@ TM::TM(const string &filename, bool v) : verbose(v)
     parseFile(filename);
     steps = 0;
     currentState = startState;
+    BLANK = '_';
+    printSelf();
 }
 void TM::run(const string &input)
 {
+}
+
+void TM::printSelf()
+{
+    cout << "states :" << endl;
+    for (auto &i : states)
+        cout << i << ' ';
+    cout << endl
+         << "inputSymbols" << endl; // Q
+    for (auto &i : inputSymbols)
+        cout << i << ' ';
+    cout << endl
+         << "tapeSymbols" << endl; // S
+    for (auto &i : tapeSymbols)
+        cout << i << ' ';
+    cout << endl
+         << "finalStates" << endl; // G
+    for (auto &i : finalStates)
+        cout << i << ' '; // F
+    cout << endl
+         << "startState " << startState << endl;
+    cout << "BLANK: " << BLANK << endl;           // B
+    cout << "tapeNumber: " << tapeNumber << endl; // N
+
+    cout << "steps: " << steps << endl;               // steps
+    cout << "currentState: " << currentState << endl; //
+    cout << "verbose: " << verbose << endl;
 }

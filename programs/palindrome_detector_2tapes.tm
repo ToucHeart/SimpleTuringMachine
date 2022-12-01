@@ -10,14 +10,14 @@
 ; the complete set of tape symbols
 #G = {0,1,_,t,r,u,e,f,a,l,s}
 
+; the set of final states
+#F = {halt_accept}
+
 ; the start state
 #q0 = 0
 
 ; the blank symbol
 #B = _
-
-; the set of final states
-#F = {halt_accept}
 
 ; the number of tapes
 #N = 2

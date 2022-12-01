@@ -24,5 +24,8 @@ public:
     TM(const string &filename, bool v);
     void parseFile(const string &filename);
     void run(const string &input);
-    void setValue(string &line); // q0 B N
+    void setValue(string &line);            // q0 B N
+    void addValue(string &line, char type); // Q S G F
+    void printSelf();
+    void parseDelta(string &line);
 };
