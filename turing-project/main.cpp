@@ -1,7 +1,7 @@
 #include <functional>
 #include <regex>
 #include "message.h"
-#include "analyseFile.h"
+#include "tm.h"
 #include <unordered_map>
 using namespace std;
 
@@ -53,8 +53,7 @@ int main(int argc, char *argv[])
     if (i == argc || (tmInput = string(argv[i])).empty())
         printMessage(LACK_INPUT, LACK_INPUT);
 
-    // TM *tm =
-    analyseFile(filename);
+    // TM *tm = analyseFile(filename);
     /*
     if (verbose)
         tm->setVerbose();

@@ -2,7 +2,7 @@
 #include "message.h"
 #include <iostream>
 #include <cstring>
-#include "analyseFile.h"
+#include "tm.h"
 using namespace std;
 
 int TAPENUM;
