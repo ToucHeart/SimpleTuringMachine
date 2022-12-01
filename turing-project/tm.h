@@ -1,25 +1,29 @@
 #include <string>
 #include <vector>
+#include <unordered_set>
 using namespace std;
 
 class transitionFunc
 {
+    string oldState;
+
+    string newState;
 };
 
 class TM
 {
 private:
-    vector<string> states;         // Q
-    vector<string> inputSymbols;   // S
-    vector<string> tapeSymbols;    // G
-    vector<string> finalStates;    // F
-    string startState;             // q0
-    char BLANK;                    // B
-    int tapeNumber;                // N
-    vector<transitionFunc *> func; // transition Func
-    int steps;                     // steps
-    string currentState;           // current State
-    bool verbose;                  // verbose mode
+    unordered_set<string> states;      // Q
+    unordered_set<char> inputSymbols;  // S
+    unordered_set<char> tapeSymbols;   // G
+    unordered_set<string> finalStates; // F
+    string startState;                 // q0
+    char BLANK;                        // B
+    int tapeNumber;                    // N
+    vector<transitionFunc *> func;     // transition Func
+    int steps;                         // steps
+    string currentState;               // current State
+    bool verbose;                      // verbose mode
 public:
     TM(const string &filename, bool v);
     void parseFile(const string &filename);

@@ -51,13 +51,28 @@ void TM::setValue(string &line) // q0 N
     }
 }
 
-void split(string &line, vector<string> &receiver, char split) // case 1 & case 3
+void addState(string &line, unordered_set<string> &receiver, char split) // case 1 & case 3
 {
     stringstream ss(line);
     string token;
     while (getline(ss, token, split))
     {
-        receiver.push_back(token);
+        receiver.insert(token);
+    }
+#if 0
+    for (auto &i : receiver)
+        cout << i << ' ';
+    cout << endl;
+#endif
+}
+
+void addSymbol(string &line, unordered_set<char> &receiver, char split) // case 1 & case 3
+{
+    stringstream ss(line);
+    string token;
+    while (getline(ss, token, split))
+    {
+        receiver.insert(token[0]);
     }
 #if 0
     for (auto &i : receiver)
@@ -71,24 +86,24 @@ void TM::addValue(string &line, char type)
     switch (type)
     {
     case 'Q':
-        split(line, this->states, ',');
+        addState(line, this->states, ',');
         break;
     case 'S':
-        split(line, this->inputSymbols, ',');
+        addSymbol(line, this->inputSymbols, ',');
         break;
     case 'G':
-        split(line, this->tapeSymbols, ',');
+        addSymbol(line, this->tapeSymbols, ',');
         break;
     case 'F':
-        split(line, this->finalStates, ',');
+        addState(line, this->finalStates, ',');
         break;
     }
 }
 void TM::parseDelta(string &line)
 {
     removeComment(line);
-    vector<string> tmp;
-    split(line, tmp, ' ');
+    unordered_set<string> tmp;
+    addState(line, tmp, ' ');
 }
 void TM::parseFile(const string &filename)
 {
