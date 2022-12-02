@@ -289,22 +289,29 @@ void Tape::printSelf(int idx) const
         beg++;
     while (end >= 0 && rightHalf[end] == '_' && end != head)
         --end;
-    
+    int rightbeg = 0;
+    if (beg >= 0)
+    {
+        while (rightbeg < end && rightHalf[rightbeg] == '_' && rightbeg != head)
+            rightbeg++;
+    }
     cout << "Index" << idx << " : ";
     for (int i = -beg; i > 0; --i)
         cout << i << ' ';
-    for (int i = 0; i <= end; ++i)
+    for (int i = rightbeg; i <= end; ++i)
         cout << i << ' ';
 
     cout << endl
          << "Tape" << idx << "  : ";
     for (int i = -beg - 1; i >= 0; --i)
         cout << leftHalf[i] << ' ';
-    for (int i = 0; i <= end; ++i)
+    for (int i = rightbeg; i <= end; ++i)
         cout << rightHalf[i] << ' ';
 
     cout << endl
          << "Head" << idx << "  : ";
+    if (beg >= 0)
+        beg = rightbeg;
     cout << string(2 * (head - beg), ' ') << '^' << endl;
 }
 
