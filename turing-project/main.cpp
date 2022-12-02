@@ -20,7 +20,7 @@ static void cmdNoFile()
 {
     printMessage(LACK_FILE, LACK_FILE);
 }
-unordered_map<string, function<void()>> arg2Func = {
+static unordered_map<string, function<void()>> arg2Func = {
     {"-h", cmdHelp},
     {"--help", cmdHelp},
     {"-v", cmdVerbose},

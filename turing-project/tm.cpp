@@ -222,7 +222,7 @@ void parseFile(const string &filename, TM *tm)
     input.close();
 }
 
-void TM::checkInput(const string &input)
+void TM::checkInput(const string &input) const
 {
     for (int i = 0; i < input.length(); ++i)
     {
@@ -248,20 +248,65 @@ void TM::checkInput(const string &input)
     cout << "==================== RUN ====================" << endl;
 }
 
+void TM::setTapes(const string &input)
+{
+    Tape *first = new Tape(input);
+    tapes.push_back(first);
+    for (int i = 1; i < tapeNumber; ++i)
+    {
+        Tape *p = new Tape();
+        tapes.push_back(p);
+    }
+}
+
 TM::TM(const string &filename, bool v) : verbose(v), steps(0), BLANK('_')
 {
     parseFile(filename, this);
     currentState = startState;
     printSelf();
 }
+/*
+Step   : 0
+Index0 : 0 1 2 3 4 5 6
+Tape0  : 1 0 0 1 0 0 1
+Head0  : ^
+Index1 : 0
+Tape1  : _
+Head1  : ^
+State  : 0
+*/
+void Tape::printSelf(int idx) const
+{
+    cout << "Index" << idx << " : ";
+    for (int i = 0; i < this->tape.size(); ++i)
+        cout << i << ' ';
+    cout << endl
+         << "Tape" << idx << "  : ";
+    for (int i = 0; i < this->tape.size(); ++i)
+        cout << this->tape[i] << ' ';
+    cout << endl
+         << "Head" << idx << "  : ";
+    cout << string(2 * this->head, ' ') << '^' << endl;
+}
+
+void TM::printStepResult() const
+{
+    cout << "Step   : " << steps << endl;
+    for (int i = 0; i < tapes.size(); ++i)
+    {
+        tapes[i]->printSelf(i);
+    }
+    cout << "State  : " << currentState << endl;
+}
 
 void TM::run(const string &input)
 {
     checkInput(input);
-    
+    setTapes(input);
+    printStepResult();
 }
 
-void TM::printSelf()
+void TM::printSelf() const
 {
     cout << "states: ";
     for (auto &i : states) // Q
