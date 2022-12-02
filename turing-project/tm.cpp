@@ -280,24 +280,29 @@ void Tape::printSelf(int idx) const
 {
 
 #ifndef DEBUG
-    cout << "\ntape " << idx << " is: ";
-    for (auto c : tape)
-        cout << c;
-    cout << endl;
+    cout << "leftHalf: " << leftHalf << endl;
+    cout << "rightHalf: " << rightHalf << endl;
 #endif
 
-    int beg = 0, end = tape.size() - 1;
-    while (tape[beg] == '_' && beg != head)
-        ++beg;
-    while (tape[end] == '_' && end != head)
+    int beg = -leftHalf.size(), end = rightHalf.size() - 1;
+    while (beg < 0 && leftHalf[-beg - 1] == '_' && beg != head)
+        beg++;
+    while (end >= 0 && rightHalf[end] == '_' && end != head)
         --end;
+    
     cout << "Index" << idx << " : ";
-    for (int i = beg; i <= end; ++i)
+    for (int i = -beg; i > 0; --i)
         cout << i << ' ';
+    for (int i = 0; i <= end; ++i)
+        cout << i << ' ';
+
     cout << endl
          << "Tape" << idx << "  : ";
-    for (int i = beg; i <= end; ++i)
-        cout << tape[i] << ' ';
+    for (int i = -beg - 1; i >= 0; --i)
+        cout << leftHalf[i] << ' ';
+    for (int i = 0; i <= end; ++i)
+        cout << rightHalf[i] << ' ';
+
     cout << endl
          << "Head" << idx << "  : ";
     cout << string(2 * (head - beg), ' ') << '^' << endl;

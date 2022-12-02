@@ -11,37 +11,46 @@ using namespace std;
 class Tape
 {
 private:
-    deque<char> tape; //支持左右添加
+    string rightHalf; //右半部分
+    string leftHalf;  //左半部分
     int head;         //当前指向
 public:
-    Tape() : head(0), tape({'_'}) {}
-    Tape(const string &input) : head(0), tape(input.begin(), input.end()) {}
+    Tape() : head(0), rightHalf(1, '_') {}
+    Tape(const string &input) : head(0), rightHalf(input) {}
     void move(char dir)
     {
         if (dir == 'l')
         {
-            if (head == 0) // 左侧添加,head不变,leftborder不变
-            {
-                tape.push_front('_');
-                return;
-            }
             --head;
+            if (-head > leftHalf.size())
+                leftHalf.push_back('_');
         }
         else if (dir == 'r')
         {
-            if (head == tape.size() - 1) //右侧添加
-            {
-                tape.push_back('_');
-            }
             ++head;
+            if (head == rightHalf.size()) //右侧添加
+            {
+                rightHalf.push_back('_');
+            }
         }
     }
-    char getCurrVal() const { return tape[head]; }
+    char getCurrVal() const
+    {
+        if (head >= 0)
+            return rightHalf[head];
+        else
+            return leftHalf[-head - 1];
+    }
     void printSelf(int idx) const;
     void setNewSym(char wirteCurrPos)
     {
         if (wirteCurrPos != '*') // new symbol is *,keep it
-            tape[head] = wirteCurrPos;
+        {
+            if (head >= 0)
+                rightHalf[head] = wirteCurrPos;
+            else
+                leftHalf[-head - 1] = wirteCurrPos;
+        }
     }
 };
 
