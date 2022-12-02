@@ -189,12 +189,10 @@ void TM::parseFile(const string &filename)
     input.close();
 }
 
-TM::TM(const string &filename, bool v) : verbose(v)
+TM::TM(const string &filename, bool v) : verbose(v), steps(0), BLANK('_')
 {
     parseFile(filename);
-    steps = 0;
     currentState = startState;
-    BLANK = '_';
     printSelf();
 }
 void TM::run(const string &input)
