@@ -20,14 +20,13 @@ private:
     bool verbose;                               // verbose mode
 public:
     TM(const string &filename, bool v);
-    void parseFile(const string &filename);
     void run(const string &input);
-    void setValue(string &line);            // q0 B N
-    void addValue(string &line, char type); // Q S G F
+    void setValue(string &line); // q0 B N
+    void addValue(string &line); // Q S G F
     void printSelf();
-    void parseDelta(string &line);
-    void addState(string &line, unordered_set<string> &receiver, char split); // case 1 & case 3
-    void addSymbol(string &line, unordered_set<char> &receiver, char split);  // case 1 & case 3
-    void errorReport(const string &error);
+    void addDelta(string &line);
+    void addState(string &line, unordered_set<string> &receiver); // case 1 & case 3
+    void addSymbol(string &line, unordered_set<char> &receiver);  // case 1 & case 3
+    void reportDeltaError(const string &error);
     void checkInput(const string &input);
 };

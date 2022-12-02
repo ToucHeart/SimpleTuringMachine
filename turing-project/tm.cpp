@@ -14,7 +14,7 @@ using namespace std;
 
 static int lineCount = 0; //记录读取文件的行数
 
-void removeBrackets(string &line) //得到{}中的部分
+void removeBrackets(string &line) //得到{}中的部分 Q S G F
 {
     int left = line.find('{');
     int right = line.find('}');
@@ -30,6 +30,72 @@ void removeComment(string &line) // q0 N delta function   去掉行尾注释和�
     while (line[len] == ' ')
         len--;
     line.resize(len + 1);
+}
+
+void getLineElement(string &line, char split, vector<string> *strs = nullptr, vector<char> *chars = nullptr) // 0 char ,1 str
+{
+    stringstream ss(line);
+    string token;
+    if (strs)
+    {
+        while (getline(ss, token, split))
+        {
+            strs->push_back(token);
+        }
+    }
+    else if (chars)
+    {
+        while (getline(ss, token, split))
+        {
+            chars->push_back(token[0]);
+        }
+    }
+#if 0
+    for (auto &i : receiver)
+        cout << i << ' ';
+    cout << endl;
+#endif
+}
+
+void TM::addState(string &line, unordered_set<string> &states) // case 1 & case 3
+{
+    vector<string> tmp;
+    getLineElement(line, ',', &tmp);
+    for (auto &s : tmp)
+    {
+        states.insert(s);
+    }
+}
+
+void TM::addSymbol(string &line, unordered_set<char> &symbols) // case 1 & case 3
+{
+    vector<char> tmp;
+    getLineElement(line, ',', nullptr, &tmp);
+    for (auto &c : tmp)
+    {
+        symbols.insert(c);
+    }
+}
+
+void TM::addValue(string &line)
+{
+    char type = line[1];
+    removeBrackets(line);
+    switch (type)
+    {
+    case 'Q':
+        addState(line, this->states);
+        break;
+    case 'F':
+        addState(line, this->finalStates);
+        break;
+    case 'S':
+        addSymbol(line, this->inputSymbols);
+        break;
+    case 'G':
+        addSymbol(line, this->tapeSymbols);
+        break;
+    }
 }
 
 void TM::setValue(string &line) // q0 N
@@ -53,96 +119,61 @@ void TM::setValue(string &line) // q0 N
     }
 }
 
-void TM::addState(string &line, unordered_set<string> &receiver, char split) // case 1 & case 3
-{
-    stringstream ss(line);
-    string token;
-    while (getline(ss, token, split))
-    {
-        receiver.insert(token);
-    }
-#if 0
-    for (auto &i : receiver)
-        cout << i << ' ';
-    cout << endl;
-#endif
-}
-
-void TM::addSymbol(string &line, unordered_set<char> &receiver, char split) // case 1 & case 3
-{
-    stringstream ss(line);
-    string token;
-    while (getline(ss, token, split))
-    {
-        receiver.insert(token[0]);
-    }
-#if 0
-    for (auto &i : receiver)
-        cout << i << ' ';
-    cout << endl;
-#endif
-}
-
-void TM::addValue(string &line, char type)
-{
-    switch (type)
-    {
-    case 'Q':
-        addState(line, this->states, ',');
-        break;
-    case 'S':
-        addSymbol(line, this->inputSymbols, ',');
-        break;
-    case 'G':
-        addSymbol(line, this->tapeSymbols, ',');
-        break;
-    case 'F':
-        addState(line, this->finalStates, ',');
-        break;
-    }
-}
-
-void TM::errorReport(const string &error)
+void TM::reportDeltaError(const string &error)
 {
     if (verbose)
+    {
         cerr << "==================== ERR ====================" << endl;
-    cerr << "line " << lineCount << ": " << error << " , ";
+        cerr << "line " << lineCount << ": " << error << " , ";
+    }
     printMessage(SYNTAX_ERROR, HELP_MESSAGE);
     if (verbose)
         cerr << "==================== END ====================" << endl;
     exit(SYNTAX_ERROR);
 }
 
-void TM::parseDelta(string &line)
+void TM::addDelta(string &line)
 {
     removeComment(line);
-    stringstream ss(line);
-    string oldstate, newstate, oldsymbol, newsymbol, dir;
-    ss >> oldstate >> oldsymbol >> newsymbol >> dir >> newstate;
-    // search oldstate in states
-    if (states.find(oldstate) == states.end())
+    vector<string> tmp;
+    getLineElement(line, ' ', &tmp);
+
+    if (tmp.size() != 5)
+        printMessage(SYNTAX_ERROR, SYNTAX_ERROR);
+#if 0
+    for (auto &s : tmp)
+        cout << s << ' ';
+    cout << endl;
+#endif
+    //"<旧状态> <旧符号组> <新符号组> <方向组> <新状态>"，
+
+    // check oldstate in states
+    if (states.find(tmp[0]) == states.end())
     {
-        errorReport(oldstate);
+        reportDeltaError(tmp[0]);
     }
-    // search newstate
-    if (states.find(newstate) == states.end())
+    // check oldsymbol
+    for (int i = 0; i < tmp[1].size(); i++)
     {
-        errorReport(newstate);
     }
-    // search dir in l r *
-    for (auto c : dir)
+    // check newsymbol
+    for (int i = 0; i < tmp[2].size(); i++)
+    {
+    }
+    // check dir in l r *
+    for (auto c : tmp[3])
     {
         if (c != 'l' && c != 'r' && c != '*')
-            errorReport(string(1, c));
+            reportDeltaError(tmp[3]);
     }
-    // search oldsymbol
-    // for (int i = 0; i < oldsymbol.size(); i++)
-    // {
-    //     if ()
-    // }
+    // check newstate
+    if (states.find(tmp[4]) == states.end())
+    {
+        reportDeltaError(tmp[4]);
+    }
 }
 
-void TM::parseFile(const string &filename)
+void parseFile(const string &filename, TM *tm)
 {
     ifstream input(filename, ios::in);
     if (!input)
@@ -165,16 +196,14 @@ void TM::parseFile(const string &filename)
             case 'G':
             case 'F':
             {
-                char c = line[1];
-                removeBrackets(line);
-                addValue(line, c);
+                tm->addValue(line);
             }
             break;
             case 'B':
                 break;
             case 'q':
             case 'N':
-                setValue(line);
+                tm->setValue(line);
                 break;
             default:
                 printMessage(UNKNOWN_GRAMMAR, UNKNOWN_GRAMMAR);
@@ -183,7 +212,7 @@ void TM::parseFile(const string &filename)
         }
         else // delta functions
         {
-            parseDelta(line);
+            tm->addDelta(line);
         }
     }
     input.close();
@@ -191,7 +220,7 @@ void TM::parseFile(const string &filename)
 
 TM::TM(const string &filename, bool v) : verbose(v), steps(0), BLANK('_')
 {
-    parseFile(filename);
+    parseFile(filename, this);
     currentState = startState;
     printSelf();
 }
@@ -208,8 +237,9 @@ void TM::checkInput(const string &input)
                 cout << "==================== ERR ====================" << endl;
                 cout << "error: \'" << input[i] << "\' was not declared in the set of input symbols" << endl;
                 cout << "Input: " << input << endl;
-                cout << string(7 + i, ' ') << '^';
+                cout << string(7 + i, ' ') << '^' << endl;
                 cout << "==================== END ====================" << endl;
+                exit(ILLEGAL_INPUT);
             }
             else
             {
@@ -228,27 +258,26 @@ void TM::run(const string &input)
 
 void TM::printSelf()
 {
-    cout << "states :" << endl;
-    for (auto &i : states)
+    cout << "states: ";
+    for (auto &i : states) // Q
         cout << i << ' ';
     cout << endl
-         << "inputSymbols" << endl; // Q
-    for (auto &i : inputSymbols)
+         << "inputSymbols: ";
+    for (auto &i : inputSymbols) // S
         cout << i << ' ';
     cout << endl
-         << "tapeSymbols" << endl; // S
-    for (auto &i : tapeSymbols)
+         << "tapeSymbols: ";
+    for (auto &i : tapeSymbols) // G
         cout << i << ' ';
     cout << endl
-         << "finalStates" << endl; // G
-    for (auto &i : finalStates)
-        cout << i << ' '; // F
+         << "finalStates: ";
+    for (auto &i : finalStates) // F
+        cout << i << ' ';
     cout << endl
-         << "startState " << startState << endl;
-    cout << "BLANK: " << BLANK << endl;           // B
-    cout << "tapeNumber: " << tapeNumber << endl; // N
-
+         << "startState: " << startState << endl;     // startState
+    cout << "BLANK: " << BLANK << endl;               // B
+    cout << "tapeNumber: " << tapeNumber << endl;     // N
     cout << "steps: " << steps << endl;               // steps
-    cout << "currentState: " << currentState << endl; //
-    cout << "verbose: " << verbose << endl;
+    cout << "currentState: " << currentState << endl; // currentState
+    cout << "verbose: " << verbose << endl;           // verbose
 }
