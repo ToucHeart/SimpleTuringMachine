@@ -1,3 +1,6 @@
+#ifndef __TM__
+#define __TM__
+
 #include <string>
 #include <vector>
 #include <map>
@@ -30,3 +33,5 @@ public:
     void reportDeltaError(const string &error, const string &type);
     void checkInput(const string &input);
 };
+
+#endif

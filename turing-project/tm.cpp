@@ -258,6 +258,7 @@ TM::TM(const string &filename, bool v) : verbose(v), steps(0), BLANK('_')
 void TM::run(const string &input)
 {
     checkInput(input);
+    
 }
 
 void TM::printSelf()

@@ -14,8 +14,7 @@ static void cmdHelp()
 
 static void cmdVerbose()
 {
-    if (!verbose)
-        verbose = true;
+    verbose = true;
 }
 static void cmdNoFile()
 {

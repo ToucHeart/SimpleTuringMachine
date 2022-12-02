@@ -1,3 +1,6 @@
+#ifndef __MESSAGE__
+#define __MESSAGE__
+
 typedef enum Message
 {
     HELP_MESSAGE,
@@ -11,3 +14,5 @@ typedef enum Message
 } Message;
 
 void printMessage(Message m, Message exit_code, bool endline = true);
+
+#endif
