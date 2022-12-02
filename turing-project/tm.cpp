@@ -11,6 +11,7 @@ using namespace std;
 // 1.Q S G F 有{} 以,分隔
 // 2.q0 B N 无{}和,
 // 3.delta function是5个字符串,之间以空格分隔,没有{} ,
+#define DEBUG
 
 static int lineCount = 0; //记录读取文件的行数
 
@@ -277,16 +278,29 @@ State  : 0
 */
 void Tape::printSelf(int idx) const
 {
+
+#ifndef DEBUG
+    cout << "\ntape " << idx << " is: ";
+    for (auto c : tape)
+        cout << c;
+    cout << endl;
+#endif
+
+    int beg = 0, end = tape.size() - 1;
+    while (tape[beg] == '_' && beg != head)
+        ++beg;
+    while (tape[end] == '_' && end != head)
+        --end;
     cout << "Index" << idx << " : ";
-    for (int i = 0; i < this->tape.size(); ++i)
+    for (int i = beg; i <= end; ++i)
         cout << i << ' ';
     cout << endl
          << "Tape" << idx << "  : ";
-    for (int i = 0; i < this->tape.size(); ++i)
-        cout << this->tape[i] << ' ';
+    for (int i = beg; i <= end; ++i)
+        cout << tape[i] << ' ';
     cout << endl
          << "Head" << idx << "  : ";
-    cout << string(2 * this->head, ' ') << '^' << endl;
+    cout << string(2 * (head - beg), ' ') << '^' << endl;
 }
 
 void TM::printStepResult() const
@@ -297,13 +311,68 @@ void TM::printStepResult() const
         tapes[i]->printSelf(i);
     }
     cout << "State  : " << currentState << endl;
+    cout << "---------------------------------------------" << endl;
+}
+void TM::findFunc(multimap<string, vector<string>>::iterator &it) //找到合适的转移函数
+{
+    string curSym;
+    for (int i = 0; i < tapes.size(); ++i)
+    {
+        curSym += tapes[i]->getCurrVal();
+    }
+    auto beg = deltafunc.lower_bound(currentState);
+    auto end = deltafunc.upper_bound(currentState);
+    for (; beg != end; ++beg)
+    {
+        string patternSym = beg->second[0];
+        int i = 0;
+        for (; i < curSym.size(); ++i)
+        {
+            if (patternSym[i] == curSym[i])
+                continue;
+            else if (patternSym[i] == '*')
+            {
+                if (curSym[i] != '_')
+                    continue;
+                else
+                    break;
+            }
+            else
+                break;
+        }
+        if (i == curSym.size())
+            it = beg;
+    }
 }
 
+void TM::Move(const string &newSym, const string &dir)
+{
+    for (int i = 0; i < newSym.size(); ++i)
+    {
+        tapes[i]->setNewSym(newSym[i]);
+        tapes[i]->move(dir[i]);
+    }
+}
+
+//"<旧状态> -> <旧符号组> <新符号组> <方向组> <新状态>"
 void TM::run(const string &input)
 {
     checkInput(input);
     setTapes(input);
-    printStepResult();
+    while (true)
+    {
+        printStepResult();
+        auto it = deltafunc.end();
+        findFunc(it);
+        if (it == deltafunc.end())
+            break;
+        string &newSym = it->second[1];
+        string &dir = it->second[2];
+        string &newstate = it->second[3];
+        Move(newSym, dir);
+        currentState = newstate;
+        steps++;
+    }
 }
 
 void TM::printSelf() const

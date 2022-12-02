@@ -11,6 +11,7 @@ typedef enum Message
     UNKNOWN_GRAMMAR,
     SYNTAX_ERROR,
     ILLEGAL_INPUT,
+    RUNTIME_ERROR,
 } Message;
 
 void printMessage(Message m, Message exit_code, bool endline = true);

@@ -2,5 +2,8 @@ build/*
 .vscode/*
 programs/*
 bin/*
-./a.cpp
-./a
+a.cpp
+a
+run.sh
+make.sh
+clean.sh

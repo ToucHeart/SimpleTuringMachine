@@ -11,6 +11,7 @@ static std::string message[] = {
     "unknown grammar in input file",
     "syntax error ",
     "illegal input",
+    "runtime error",
 };
 
 void printMessage(Message m, Message exit_code, bool endline)

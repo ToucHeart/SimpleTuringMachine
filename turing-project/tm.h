@@ -13,33 +13,36 @@ class Tape
 private:
     deque<char> tape; //支持左右添加
     int head;         //当前指向
-
 public:
     Tape() : head(0), tape({'_'}) {}
     Tape(const string &input) : head(0), tape(input.begin(), input.end()) {}
-    void moveLeft(char wirteCurrPos)
+    void move(char dir)
     {
-        if (wirteCurrPos != '*') // new symbol is *,keep it
-            tape[head] = wirteCurrPos;
-        if (head == 0) // 左侧添加,head不变
+        if (dir == 'l')
         {
-            tape.push_front('_');
-            return;
+            if (head == 0) // 左侧添加,head不变,leftborder不变
+            {
+                tape.push_front('_');
+                return;
+            }
+            --head;
         }
-        --head;
-    }
-    void moveRight(char wirteCurrPos)
-    {
-        if (wirteCurrPos != '*')
-            tape[head] = wirteCurrPos;
-        if (head == tape.size() - 1) //右侧添加
+        else if (dir == 'r')
         {
-            tape.push_back('_');
+            if (head == tape.size() - 1) //右侧添加
+            {
+                tape.push_back('_');
+            }
+            ++head;
         }
-        ++head;
     }
     char getCurrVal() const { return tape[head]; }
     void printSelf(int idx) const;
+    void setNewSym(char wirteCurrPos)
+    {
+        if (wirteCurrPos != '*') // new symbol is *,keep it
+            tape[head] = wirteCurrPos;
+    }
 };
 
 class TM
@@ -70,6 +73,8 @@ public:
     void checkInput(const string &input) const;
     void setTapes(const string &input);
     void printStepResult() const;
+    void findFunc(multimap<string, vector<string>>::iterator &it);
+    void Move(const string &newSym, const string &dir);
 };
 
 #endif
