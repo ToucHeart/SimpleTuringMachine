@@ -195,8 +195,35 @@ TM::TM(const string &filename, bool v) : verbose(v), steps(0), BLANK('_')
     currentState = startState;
     printSelf();
 }
+
+void TM::checkInput(const string &input)
+{
+    for (int i = 0; i < input.length(); ++i)
+    {
+        if (inputSymbols.find(input[i]) == inputSymbols.end())
+        {
+            if (verbose)
+            {
+                cout << "Input: " << input << endl;
+                cout << "==================== ERR ====================" << endl;
+                cout << "error: \'" << input[i] << "\' was not declared in the set of input symbols" << endl;
+                cout << "Input: " << input << endl;
+                cout << string(7 + i, ' ') << '^';
+                cout << "==================== END ====================" << endl;
+            }
+            else
+            {
+                printMessage(ILLEGAL_INPUT, ILLEGAL_INPUT);
+            }
+        }
+    }
+    cout << "Input:" << input << endl;
+    cout << "==================== RUN ====================" << endl;
+}
+
 void TM::run(const string &input)
 {
+    checkInput(input);
 }
 
 void TM::printSelf()

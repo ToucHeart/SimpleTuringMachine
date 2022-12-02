@@ -10,6 +10,7 @@ static std::string message[] = {
     "lack input for TM",
     "unknown grammar in input file",
     "syntax error ",
+    "illegal input",
 };
 
 void printMessage(Message m, Message exit_code)

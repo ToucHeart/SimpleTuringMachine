@@ -7,6 +7,7 @@ typedef enum Message
     LACK_INPUT,
     UNKNOWN_GRAMMAR,
     SYNTAX_ERROR,
+    ILLEGAL_INPUT,
 } Message;
 
 void printMessage(Message m, Message exit_code);

@@ -29,4 +29,5 @@ public:
     void addState(string &line, unordered_set<string> &receiver, char split); // case 1 & case 3
     void addSymbol(string &line, unordered_set<char> &receiver, char split);  // case 1 & case 3
     void errorReport(const string &error);
+    void checkInput(const string &input);
 };
