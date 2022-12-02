@@ -50,8 +50,9 @@ int main(int argc, char *argv[])
         printMessage(ARG_FORMAT_ERROR, ARG_FORMAT_ERROR);
 
     string tmInput;
-    if (i == argc || (tmInput = string(argv[i])).empty())
+    if (i == argc)
         printMessage(LACK_INPUT, LACK_INPUT);
+    tmInput = string(argv[i]);
 
     TM *tm = new TM(filename, verbose);
     tm->run(tmInput);

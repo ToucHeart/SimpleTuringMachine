@@ -6,6 +6,7 @@ typedef enum Message
     ARG_FORMAT_ERROR,
     LACK_INPUT,
     UNKNOWN_GRAMMAR,
+    SYNTAX_ERROR,
 } Message;
 
 void printMessage(Message m, Message exit_code);

@@ -12,6 +12,8 @@ using namespace std;
 // 2.q0 B N 无{}和,
 // 3.delta function是5个字符串,之间以空格分隔,没有{} ,
 
+static int lineCount = 0; //记录读取文件的行数
+
 void removeBrackets(string &line) //得到{}中的部分
 {
     int left = line.find('{');
@@ -51,7 +53,7 @@ void TM::setValue(string &line) // q0 N
     }
 }
 
-void addState(string &line, unordered_set<string> &receiver, char split) // case 1 & case 3
+void TM::addState(string &line, unordered_set<string> &receiver, char split) // case 1 & case 3
 {
     stringstream ss(line);
     string token;
@@ -66,7 +68,7 @@ void addState(string &line, unordered_set<string> &receiver, char split) // case
 #endif
 }
 
-void addSymbol(string &line, unordered_set<char> &receiver, char split) // case 1 & case 3
+void TM::addSymbol(string &line, unordered_set<char> &receiver, char split) // case 1 & case 3
 {
     stringstream ss(line);
     string token;
@@ -99,12 +101,47 @@ void TM::addValue(string &line, char type)
         break;
     }
 }
+
+void TM::errorReport(const string &error)
+{
+    if (verbose)
+        cerr << "==================== ERR ====================" << endl;
+    cerr << "line " << lineCount << ": " << error << " , ";
+    printMessage(SYNTAX_ERROR, HELP_MESSAGE);
+    if (verbose)
+        cerr << "==================== END ====================" << endl;
+    exit(SYNTAX_ERROR);
+}
+
 void TM::parseDelta(string &line)
 {
     removeComment(line);
-    unordered_set<string> tmp;
-    addState(line, tmp, ' ');
+    stringstream ss(line);
+    string oldstate, newstate, oldsymbol, newsymbol, dir;
+    ss >> oldstate >> oldsymbol >> newsymbol >> dir >> newstate;
+    // search oldstate in states
+    if (states.find(oldstate) == states.end())
+    {
+        errorReport(oldstate);
+    }
+    // search newstate
+    if (states.find(newstate) == states.end())
+    {
+        errorReport(newstate);
+    }
+    // search dir in l r *
+    for (auto c : dir)
+    {
+        if (c != 'l' && c != 'r' && c != '*')
+            errorReport(string(1, c));
+    }
+    // search oldsymbol
+    // for (int i = 0; i < oldsymbol.size(); i++)
+    // {
+    //     if ()
+    // }
 }
+
 void TM::parseFile(const string &filename)
 {
     ifstream input(filename, ios::in);
@@ -116,6 +153,7 @@ void TM::parseFile(const string &filename)
     string line;
     while (getline(input, line))
     {
+        lineCount++;
         if (line.empty() || line[0] == ';')
             continue;
         if (line[0] == '#')
