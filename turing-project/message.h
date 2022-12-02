@@ -10,4 +10,4 @@ typedef enum Message
     ILLEGAL_INPUT,
 } Message;
 
-void printMessage(Message m, Message exit_code);
+void printMessage(Message m, Message exit_code, bool endline = true);

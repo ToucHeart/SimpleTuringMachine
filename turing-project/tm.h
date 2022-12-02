@@ -27,6 +27,6 @@ public:
     void addDelta(string &line);
     void addState(string &line, unordered_set<string> &receiver); // case 1 & case 3
     void addSymbol(string &line, unordered_set<char> &receiver);  // case 1 & case 3
-    void reportDeltaError(const string &error);
+    void reportDeltaError(const string &error, const string &type);
     void checkInput(const string &input);
 };

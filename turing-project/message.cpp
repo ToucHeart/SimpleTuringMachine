@@ -13,9 +13,11 @@ static std::string message[] = {
     "illegal input",
 };
 
-void printMessage(Message m, Message exit_code)
+void printMessage(Message m, Message exit_code, bool endline)
 {
-    std::cout << message[m] << std::endl;
+    std::cout << message[m];
+    if (endline)
+        std::cout << std::endl;
     if (exit_code != 0)
         exit(exit_code);
 }

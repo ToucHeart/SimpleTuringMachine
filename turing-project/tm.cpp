@@ -119,16 +119,13 @@ void TM::setValue(string &line) // q0 N
     }
 }
 
-void TM::reportDeltaError(const string &error)
+void TM::reportDeltaError(const string &error, const string &type)
 {
+    printMessage(SYNTAX_ERROR, HELP_MESSAGE, false);
     if (verbose)
     {
-        cerr << "==================== ERR ====================" << endl;
-        cerr << "line " << lineCount << ": " << error << " , ";
+        cerr << "line " << lineCount << ": \'" << error << "\' , No such one in " << type << endl;
     }
-    printMessage(SYNTAX_ERROR, HELP_MESSAGE);
-    if (verbose)
-        cerr << "==================== END ====================" << endl;
     exit(SYNTAX_ERROR);
 }
 
@@ -145,16 +142,19 @@ void TM::addDelta(string &line)
         cout << s << ' ';
     cout << endl;
 #endif
+
     //"<旧状态> <旧符号组> <新符号组> <方向组> <新状态>"，
 
     // check oldstate in states
     if (states.find(tmp[0]) == states.end())
     {
-        reportDeltaError(tmp[0]);
+        reportDeltaError(tmp[0], "states");
     }
     // check oldsymbol
     for (int i = 0; i < tmp[1].size(); i++)
     {
+        if (tmp[1][i] != '*' && tapeSymbols.find(tmp[1][i]) == tapeSymbols.end())
+            reportDeltaError(tmp[1], "tapeSymbols");
     }
     // check newsymbol
     for (int i = 0; i < tmp[2].size(); i++)
@@ -164,12 +164,12 @@ void TM::addDelta(string &line)
     for (auto c : tmp[3])
     {
         if (c != 'l' && c != 'r' && c != '*')
-            reportDeltaError(tmp[3]);
+            reportDeltaError(tmp[3], "directions");
     }
     // check newstate
     if (states.find(tmp[4]) == states.end())
     {
-        reportDeltaError(tmp[4]);
+        reportDeltaError(tmp[4], "states");
     }
 }
 
@@ -218,13 +218,6 @@ void parseFile(const string &filename, TM *tm)
     input.close();
 }
 
-TM::TM(const string &filename, bool v) : verbose(v), steps(0), BLANK('_')
-{
-    parseFile(filename, this);
-    currentState = startState;
-    printSelf();
-}
-
 void TM::checkInput(const string &input)
 {
     for (int i = 0; i < input.length(); ++i)
@@ -249,6 +242,13 @@ void TM::checkInput(const string &input)
     }
     cout << "Input:" << input << endl;
     cout << "==================== RUN ====================" << endl;
+}
+
+TM::TM(const string &filename, bool v) : verbose(v), steps(0), BLANK('_')
+{
+    parseFile(filename, this);
+    currentState = startState;
+    printSelf();
 }
 
 void TM::run(const string &input)
