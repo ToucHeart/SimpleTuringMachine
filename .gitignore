@@ -2,3 +2,5 @@ build/*
 .vscode/*
 programs/*
 bin/*
+a.cpp
+a

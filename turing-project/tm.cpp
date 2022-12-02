@@ -61,7 +61,7 @@ void TM::addState(string &line, unordered_set<string> &states) // case 1 & case 
 {
     vector<string> tmp;
     getLineElement(line, ',', &tmp);
-    for (auto &s : tmp)
+    for (const auto &s : tmp)
     {
         states.insert(s);
     }
@@ -71,7 +71,7 @@ void TM::addSymbol(string &line, unordered_set<char> &symbols) // case 1 & case 
 {
     vector<char> tmp;
     getLineElement(line, ',', nullptr, &tmp);
-    for (auto &c : tmp)
+    for (const auto &c : tmp)
     {
         symbols.insert(c);
     }
@@ -173,6 +173,8 @@ void TM::addDelta(string &line)
     {
         reportDeltaError(tmp[4], "states");
     }
+    // add to delta
+    deltafunc.insert(pair<string, vector<string>>(tmp[0], {tmp[1], tmp[2], tmp[3], tmp[4]}));
 }
 
 void parseFile(const string &filename, TM *tm)
