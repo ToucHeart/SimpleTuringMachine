@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <deque>
 #include <unordered_set>
 #include <unordered_map>
 #include <vector>
@@ -26,4 +27,7 @@ int main()
     auto it = keys.find("A");
     if (it == keys.end())
         cout << "failed";
+    deque<string> e;
+    e.push_front("ads");
+    e.pop_front
 }
