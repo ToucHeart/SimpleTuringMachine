@@ -159,6 +159,8 @@ void TM::addDelta(string &line)
     // check newsymbol
     for (int i = 0; i < tmp[2].size(); i++)
     {
+        if (tmp[2][i] != '*' && tapeSymbols.find(tmp[2][i]) == tapeSymbols.end())
+            reportDeltaError(tmp[2], "tapeSymbols");
     }
     // check dir in l r *
     for (auto c : tmp[3])
