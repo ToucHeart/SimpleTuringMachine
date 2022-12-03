@@ -276,6 +276,42 @@ Tape1  : _
 Head1  : ^
 State  : 0
 */
+void Tape::getBorder(int &leftbeg, int &rightbeg, int &end) const
+{
+    while (leftbeg < 0 && leftHalf[-leftbeg - 1] == '_' && leftbeg != head)
+        leftbeg++;
+    while (end >= 0 && rightHalf[end] == '_' && end != head)
+        --end;
+    if (leftbeg >= 0)
+    {
+        while (rightbeg < end && rightHalf[rightbeg] == '_' && rightbeg != head)
+            rightbeg++;
+    }
+}
+
+void Tape::printTapeContent(const int &leftbeg, const int &rightbeg, const int &end, bool printBlank) const
+{
+    for (int i = -leftbeg - 1; i >= 0; --i)
+    {
+        cout << leftHalf[i];
+        if (printBlank)
+            cout << ' ';
+    }
+    for (int i = rightbeg; i <= end; ++i)
+    {
+        cout << rightHalf[i];
+        if (printBlank)
+            cout << ' ';
+    }
+}
+
+void Tape::printResult()
+{
+    int leftbeg = -leftHalf.size(), end = rightHalf.size() - 1, rightbeg = 0;
+    getBorder(leftbeg, rightbeg, end);
+    printTapeContent(leftbeg, rightbeg, end, false);
+}
+
 void Tape::printSelf(int idx) const
 {
 
@@ -284,47 +320,37 @@ void Tape::printSelf(int idx) const
     cout << "rightHalf: " << rightHalf << endl;
 #endif
 
-    int beg = -leftHalf.size(), end = rightHalf.size() - 1;
-    while (beg < 0 && leftHalf[-beg - 1] == '_' && beg != head)
-        beg++;
-    while (end >= 0 && rightHalf[end] == '_' && end != head)
-        --end;
-    int rightbeg = 0;
-    if (beg >= 0)
-    {
-        while (rightbeg < end && rightHalf[rightbeg] == '_' && rightbeg != head)
-            rightbeg++;
-    }
+    int leftbeg = -leftHalf.size(), end = rightHalf.size() - 1, rightbeg = 0;
+    getBorder(leftbeg, rightbeg, end);
+
     cout << "Index" << idx << " : ";
-    for (int i = -beg; i > 0; --i)
+    for (int i = -leftbeg; i > 0; --i)
         cout << i << ' ';
     for (int i = rightbeg; i <= end; ++i)
         cout << i << ' ';
 
     cout << endl
          << "Tape" << idx << "  : ";
-    for (int i = -beg - 1; i >= 0; --i)
-        cout << leftHalf[i] << ' ';
-    for (int i = rightbeg; i <= end; ++i)
-        cout << rightHalf[i] << ' ';
+    printTapeContent(leftbeg, rightbeg, end);
 
     cout << endl
          << "Head" << idx << "  : ";
-    if (beg >= 0)
-        beg = rightbeg;
-    cout << string(2 * (head - beg), ' ') << '^' << endl;
+    if (leftbeg >= 0)
+        leftbeg = rightbeg;
+    cout << string(2 * (head - leftbeg), ' ') << '^' << endl;
 }
 
-void TM::printStepResult() const
+void TM::printId() const
 {
     cout << "Step   : " << steps << endl;
+    cout << "State  : " << currentState << endl;
     for (int i = 0; i < tapes.size(); ++i)
     {
         tapes[i]->printSelf(i);
     }
-    cout << "State  : " << currentState << endl;
     cout << "---------------------------------------------" << endl;
 }
+
 void TM::findFunc(multimap<string, vector<string>>::iterator &it) //找到合适的转移函数
 {
     string curSym;
@@ -366,6 +392,17 @@ void TM::Move(const string &newSym, const string &dir)
     }
 }
 
+void TM::printResult()
+{
+    if (verbose)
+        cout << "Result: ";
+    tapes[0]->printResult();
+    if (verbose)
+        cout << endl
+             << "==================== END ====================";
+    cout << endl;
+}
+
 //"<旧状态> -> <旧符号组> <新符号组> <方向组> <新状态>"
 void TM::run(const string &input)
 {
@@ -373,7 +410,8 @@ void TM::run(const string &input)
     setTapes(input);
     while (true)
     {
-        printStepResult();
+        if (verbose)
+            printId();
         auto it = deltafunc.end();
         findFunc(it);
         if (it == deltafunc.end())
@@ -385,6 +423,7 @@ void TM::run(const string &input)
         currentState = newstate;
         steps++;
     }
+    printResult();
 }
 
 void TM::printSelf() const

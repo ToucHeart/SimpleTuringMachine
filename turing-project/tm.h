@@ -17,6 +17,9 @@ private:
 public:
     Tape() : head(0), rightHalf(1, '_') {}
     Tape(const string &input) : head(0), rightHalf(input) {}
+    void getBorder(int &leftbeg, int &rightbeg, int &end) const;
+    void printTapeContent(const int &leftbeg, const int &rightbeg, const int &end, bool printBlank = true) const;
+    void printResult();
     void move(char dir)
     {
         if (dir == 'l')
@@ -81,9 +84,10 @@ public:
     void reportDeltaError(const string &error, const string &type);
     void checkInput(const string &input) const;
     void setTapes(const string &input);
-    void printStepResult() const;
+    void printId() const;
     void findFunc(multimap<string, vector<string>>::iterator &it);
     void Move(const string &newSym, const string &dir);
+    void printResult();
 };
 
 #endif
