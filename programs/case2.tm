@@ -52,9 +52,3 @@ reject2 ___ a__ r** reject3
 reject3 ___ l__ r** reject4
 reject4 ___ s__ r** reject5
 reject5 ___ e__ *** halt_reject
-
-
-
-
-
-
