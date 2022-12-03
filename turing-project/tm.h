@@ -16,9 +16,13 @@ private:
     int head;         //当前指向
 public:
     Tape() : head(0), rightHalf(1, '_') {}
-    Tape(const string &input) : head(0), rightHalf(input) {}
-    void getBorder(int &leftbeg, int &rightbeg, int &end) const;
-    void printTapeContent(const int &leftbeg, const int &rightbeg, const int &end, bool printBlank = true) const;
+    Tape(const string &input) : head(0), rightHalf(input)
+    {
+        if (rightHalf.size() == 0)
+            rightHalf = string(1, '_');
+    }
+    void getBorder(int &leftbeg, int &leftend, int &rightbeg, int &rightend) const;
+    void printTapeContent(const int &leftbeg, const int &leftend, const int &rightbeg, const int &rightend, bool printBlank = true) const;
     void printResult();
     void move(char dir)
     {
