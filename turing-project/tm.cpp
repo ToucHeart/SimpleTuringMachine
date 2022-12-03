@@ -295,13 +295,17 @@ void Tape::printTapeContent(const int &leftbeg, const int &rightbeg, const int &
     {
         cout << leftHalf[i];
         if (printBlank)
-            cout << ' ';
+        {
+            cout << string(to_string(i).size(), ' '); //上下对齐
+        }
     }
     for (int i = rightbeg; i <= end; ++i)
     {
         cout << rightHalf[i];
         if (printBlank)
-            cout << ' ';
+        {
+            cout << string(to_string(i).size(), ' ');
+        }
     }
 }
 
@@ -337,7 +341,12 @@ void Tape::printSelf(int idx) const
          << "Head" << idx << "  : ";
     if (leftbeg >= 0)
         leftbeg = rightbeg;
-    cout << string(2 * (head - leftbeg), ' ') << '^' << endl;
+    int blankCount = 0;
+    for (int j = leftbeg; j < head; ++j)
+    {
+        blankCount += to_string(abs(j)).size() + 1;
+    }
+    cout << string(blankCount, ' ') << '^' << endl;
 }
 
 void TM::printId() const
