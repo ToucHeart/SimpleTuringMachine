@@ -303,7 +303,7 @@ void Tape::printTapeContent(const int &leftbeg, const int &leftend, const int &r
             cout << leftHalf[i];
             if (printBlank)
             {
-                cout << string(to_string(i).size(), ' '); //上下对齐
+                cout << string(to_string(i + 1).size(), ' '); //上下对齐
             }
         }
     }
