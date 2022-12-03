@@ -448,7 +448,6 @@ void TM::run(const string &input)
         currentState = newstate;
         steps++;
     }
-    printResult();
 }
 
 void TM::printSelf() const
