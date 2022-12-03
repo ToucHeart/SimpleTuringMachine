@@ -3,7 +3,7 @@
 
 typedef enum Message
 {
-    HELP_MESSAGE,
+    NORMAL,
     LACK_FILE,
     FILE_OPEN_ERROR,
     ARG_FORMAT_ERROR,
@@ -12,6 +12,7 @@ typedef enum Message
     SYNTAX_ERROR,
     ILLEGAL_INPUT,
     RUNTIME_ERROR,
+    NO_BRACKETS,
 } Message;
 
 void printMessage(Message m, Message exit_code, bool endline = true);

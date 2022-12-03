@@ -9,7 +9,7 @@ static bool verbose = false;
 
 static void cmdHelp()
 {
-    printMessage(HELP_MESSAGE, HELP_MESSAGE);
+    printMessage(NORMAL, NORMAL);
 }
 
 static void cmdVerbose()
@@ -35,7 +35,11 @@ int main(int argc, char *argv[])
     {
         auto it = arg2Func.find(argv[i]);
         if (it != arg2Func.end())
+        {
             it->second();
+            if (it->first == "-h" || it->first == "--help")
+                exit(NORMAL);
+        }
         else
             break;
     }

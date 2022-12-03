@@ -12,6 +12,7 @@ static std::string message[] = {
     "syntax error ",
     "illegal input",
     "runtime error",
+    "no brackets found in states or symbols",
 };
 
 void printMessage(Message m, Message exit_code, bool endline)

@@ -6,8 +6,6 @@
 #include "tm.h"
 using namespace std;
 
-// #Q = {0,cp,cmp,mh,accept,accept2,accept3,accept4,halt_accept,reject,reject2,reject3,reject4,reject5,halt_reject}
-
 // 1.Q S G F 有{} 以,分隔
 // 2.q0 B N 无{}和,
 // 3.delta function是5个字符串,之间以空格分隔,没有{} ,
@@ -17,8 +15,10 @@ static int lineCount = 0; //记录读取文件的行数
 
 void removeBrackets(string &line) //得到{}中的部分 Q S G F
 {
-    int left = line.find('{');
-    int right = line.find('}');
+    size_t left = line.find('{');
+    size_t right = line.find('}');
+    if (left == string::npos || right == string::npos)
+        printMessage(NO_BRACKETS, NO_BRACKETS);
     line = line.substr(left + 1, right - left - 1);
 }
 
@@ -101,7 +101,6 @@ void TM::addValue(string &line)
 
 void TM::setValue(string &line) // q0 N
 {
-    removeComment(line);
     int left = line.find('=');
     left++;
     while (left < line.size() && line[left] == ' ')
@@ -122,7 +121,7 @@ void TM::setValue(string &line) // q0 N
 
 void TM::reportDeltaError(const string &error, const string &type)
 {
-    printMessage(SYNTAX_ERROR, HELP_MESSAGE, false);
+    printMessage(SYNTAX_ERROR, NORMAL, false);
     if (verbose)
     {
         cerr << "line " << lineCount << ": \'" << error << "\' , No such one in " << type << endl;
@@ -132,7 +131,6 @@ void TM::reportDeltaError(const string &error, const string &type)
 
 void TM::addDelta(string &line)
 {
-    removeComment(line);
     vector<string> tmp;
     getLineElement(line, ' ', &tmp);
 
@@ -192,6 +190,7 @@ void parseFile(const string &filename, TM *tm)
         lineCount++;
         if (line.empty() || line[0] == ';')
             continue;
+        removeComment(line);
         if (line[0] == '#')
         {
             switch (line[1])
