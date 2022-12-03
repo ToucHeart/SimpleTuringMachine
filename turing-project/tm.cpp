@@ -225,13 +225,14 @@ void parseFile(const string &filename, TM *tm)
 
 void TM::checkInput(const string &input) const
 {
+    if (verbose)
+        cout << "Input: " << input << endl;
     for (int i = 0; i < input.length(); ++i)
     {
         if (inputSymbols.find(input[i]) == inputSymbols.end())
         {
             if (verbose)
             {
-                cout << "Input: " << input << endl;
                 cout << "==================== ERR ====================" << endl;
                 cout << "error: \'" << input[i] << "\' was not declared in the set of input symbols" << endl;
                 cout << "Input: " << input << endl;
@@ -245,8 +246,8 @@ void TM::checkInput(const string &input) const
             }
         }
     }
-    cout << "Input:" << input << endl;
-    cout << "==================== RUN ====================" << endl;
+    if (verbose)
+        cout << "==================== RUN ====================" << endl;
 }
 
 void TM::setTapes(const string &input)
@@ -264,7 +265,7 @@ TM::TM(const string &filename, bool v) : verbose(v), steps(0), BLANK('_')
 {
     parseFile(filename, this);
     currentState = startState;
-    printSelf();
+    // printSelf();
 }
 /*
 Step   : 0
