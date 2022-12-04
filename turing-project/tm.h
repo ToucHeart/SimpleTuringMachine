@@ -22,7 +22,7 @@ public:
             rightHalf = string(1, '_');
     }
     void getBorder(int &leftbeg, int &leftend, int &rightbeg, int &rightend) const;
-    void printTapeContent(const int &leftbeg, const int &leftend, const int &rightbeg, const int &rightend, bool printBlank = true) const;
+    void printTapeContent(const int &leftbeg, const int &leftend, const int &rightbeg, const int &rightend, string &ans, bool printBlank = true) const;
     void printResult();
     void move(char dir)
     {

@@ -294,16 +294,16 @@ void Tape::getBorder(int &leftbeg, int &leftend, int &rightbeg, int &rightend) c
     }
 }
 
-void Tape::printTapeContent(const int &leftbeg, const int &leftend, const int &rightbeg, const int &rightend, bool printBlank) const
+void Tape::printTapeContent(const int &leftbeg, const int &leftend, const int &rightbeg, const int &rightend, string &ans, bool printBlank) const
 {
     if (leftbeg < 0)
     {
         for (int i = -leftbeg - 1; i >= -leftend - 1; --i)
         {
-            cout << leftHalf[i];
+            ans += leftHalf[i];
             if (printBlank)
             {
-                cout << string(to_string(i + 1).size(), ' '); //上下对齐
+                ans += string(to_string(i + 1).size(), ' '); //上下对齐
             }
         }
     }
@@ -311,10 +311,10 @@ void Tape::printTapeContent(const int &leftbeg, const int &leftend, const int &r
     {
         for (int i = rightbeg; i <= rightend; ++i)
         {
-            cout << rightHalf[i];
+            ans += rightHalf[i];
             if (printBlank)
             {
-                cout << string(to_string(i).size(), ' ');
+                ans += string(to_string(i).size(), ' ');
             }
         }
     }
@@ -324,7 +324,12 @@ void Tape::printResult()
 {
     int leftbeg = -leftHalf.size(), leftend = -1, rightbeg = 0, end = rightHalf.size() - 1;
     getBorder(leftbeg, leftend, rightbeg, end);
-    printTapeContent(leftbeg, leftend, rightbeg, end, false);
+    string ans;
+    printTapeContent(leftbeg, leftend, rightbeg, end, ans, false);
+    if (ans.size() == 1 && ans[0] == '_')
+        cout << "";
+    else
+        cout << ans;
 }
 
 void Tape::printSelf(int idx) const
@@ -351,7 +356,10 @@ void Tape::printSelf(int idx) const
     }
     cout << endl
          << "Tape" << idx << "  : ";
-    printTapeContent(leftbeg, leftend, rightbeg, end);
+         
+    string ans;
+    printTapeContent(leftbeg, leftend, rightbeg, end, ans);
+    cout << ans;
 
     cout << endl
          << "Head" << idx << "  : ";
