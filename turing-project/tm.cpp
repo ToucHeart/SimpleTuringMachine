@@ -260,6 +260,14 @@ void TM::setTapes(const string &input)
     }
 }
 
+TM::~TM()
+{
+    for (int i = 0; i < tapeNumber; ++i)
+    {
+        delete tapes[i];
+    }
+}
+
 TM::TM(const string &filename, bool v) : verbose(v), steps(0), BLANK('_')
 {
     parseFile(filename, this);
@@ -356,7 +364,7 @@ void Tape::printSelf(int idx) const
     }
     cout << endl
          << "Tape" << idx << "  : ";
-         
+
     string ans;
     printTapeContent(leftbeg, leftend, rightbeg, end, ans);
     cout << ans;

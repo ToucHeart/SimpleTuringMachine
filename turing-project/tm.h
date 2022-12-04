@@ -92,6 +92,7 @@ public:
     void findFunc(multimap<string, vector<string>>::iterator &it);
     void Move(const string &newSym, const string &dir);
     void printResult();
+    ~TM();
 };
 
 #endif

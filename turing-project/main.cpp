@@ -60,5 +60,6 @@ int main(int argc, char *argv[])
     TM *tm = new TM(filename, verbose);
     tm->run(tmInput);
     tm->printResult();
+    delete tm;
     return 0;
 }
