@@ -121,10 +121,10 @@ void TM::setValue(string &line) // q0 N
 
 void TM::reportDeltaError(const string &error, const string &type)
 {
-    printMessage(SYNTAX_ERROR, NORMAL, false);
+    printMessage(SYNTAX_ERROR, NORMAL, !verbose);
     if (verbose)
     {
-        cerr << "line " << lineCount << ": \'" << error << "\' , No such one in " << type << endl;
+        cerr << ": line " << lineCount << ": \'" << error << "\' , No such one in " << type << endl;
     }
     exit(SYNTAX_ERROR);
 }

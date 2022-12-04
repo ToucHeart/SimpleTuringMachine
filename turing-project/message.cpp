@@ -9,7 +9,7 @@ static std::string message[] = {
     "arg format error,expecting *.tm",
     "lack input for TM",
     "unknown grammar in input file",
-    "syntax error ",
+    "syntax error",
     "illegal input",
     "runtime error",
     "no brackets found in states or symbols",
