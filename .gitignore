@@ -1,8 +1,6 @@
 build/*
 .vscode/*
 bin/*
-a.cpp
 a
 run.sh
-make.sh
 clean.sh
