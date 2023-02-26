@@ -1,18 +1,17 @@
 #include "message.h"
-#include <string>
 #include <iostream>
 
-static std::string message[] = {
-    "usage: turing [-v|--verbose] [-h|--help] <tm> <input>",
-    "lack TM",
-    ", file open failed",
-    "arg format error,expecting *.tm",
-    "lack input for TM",
-    "unknown grammar in input file",
-    "syntax error",
-    "illegal input",
-    "runtime error",
-    "no brackets found in states or symbols",
+static const char *message[] = {
+    [NORMAL] = "usage: turing [-v|--verbose] [-h|--help] <tm> <input>",
+    [LACK_FILE] = "lack TM",
+    [FILE_OPEN_ERROR] = ", file open failed",
+    [ARG_FORMAT_ERROR] = "arg format error,expecting *.tm",
+    [LACK_INPUT] = "lack input for TM",
+    [UNKNOWN_GRAMMAR] = "unknown grammar in input file",
+    [SYNTAX_ERROR] = "syntax error",
+    [ILLEGAL_INPUT] = "illegal input",
+    [RUNTIME_ERROR] = "runtime error",
+    [NO_BRACKETS] = "no brackets found in states or symbols",
 };
 
 void printMessage(Message m, Message exit_code, bool endline)
