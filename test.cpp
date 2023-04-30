@@ -1,3 +1,6 @@
+/*
+ * test the implemented truing machine using programming language.
+*/
 #include <iostream>
 #include <fstream>
 #include <string>
